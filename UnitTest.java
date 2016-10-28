@@ -28,10 +28,9 @@ public class UnitTest {
         obj = new ClassD();
         objClass = obj.getClass();
         m = objClass.getMethods();
-        dClass=objInspector.inspectDeclaringClass(m[0]);
+        dClass = objInspector.inspectDeclaringClass(m[0]);
         org.junit.Assert.assertEquals(dClass, "ClassD");
 
-        //
     }
 
 	@Test  
@@ -51,8 +50,28 @@ public class UnitTest {
         }
         catch (Exception e){}
         objClass = obj.getClass();
-	    strSuperClass=objInspector.inspectSuperClass(objClass);
+	    strSuperClass = objInspector.inspectSuperClass(objClass);
 	    org.junit.Assert.assertEquals("ClassC",strSuperClass);
-
+	}
+	
+	@Test  
+	// test names of interfaces implemented
+	public void testInterfaces() {
+		// testing class is ClassA, so "java.io.Serializable, Runnable" is expected
+	    Object obj= new ClassA();
+	    Class objClass = obj.getClass();
+	    Inspector objInspector = new Inspector();
+	    String strInterfaces=objInspector.inspectInterfaces(objClass);
+	    org.junit.Assert.assertEquals("java.io.Serializable, java.lang.Runnable",strInterfaces);
+	    
+	    // testing class is ClassB, so "Runnable" is expected
+	    // must have a try catch clause b/c there is a throw in ClassB
+        try{
+        	obj = new ClassB();
+        }
+        catch (Exception e){}
+        objClass = obj.getClass();
+	    strInterfaces = objInspector.inspectInterfaces(objClass);
+	    org.junit.Assert.assertEquals("java.lang.Runnable",strInterfaces);
 	}
 }
