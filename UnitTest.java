@@ -1,5 +1,6 @@
 import org.junit.Test;
 import java.lang.reflect.*;
+import java.util.*;
 
 /**
 * Assignment 2
@@ -30,7 +31,6 @@ public class UnitTest {
         m = objClass.getMethods();
         dClass = objInspector.inspectDeclaringClass(m[0]);
         org.junit.Assert.assertEquals(dClass, "ClassD");
-
     }
 
 	@Test  
@@ -83,13 +83,13 @@ public class UnitTest {
 	    Class objClass = obj.getClass();
 	    Inspector objInspector = new Inspector();
 	    String strMethods = objInspector.inspectMethods(objClass);
-	    String expectedStr = "Method: setVal\n\tExceptions thrown: java.lang.Exception"+
-	    		"\n\tParameter type(s): int\n\tReturn type: void\n\tModifier: public"+
-	    		"\n\nMethod: run\n\tReturn type: void\n\tModifier: public"+
-	    		"\n\nMethod: toString\n\tReturn type: java.lang.String\n\tModifier: public"+
-	    		"\n\nMethod: getVal\n\tReturn type: int\n\tModifier: public"+
-	    		"\n\nMethod: printSomething\n\tReturn type: void\n\tModifier: private\n\n";
-	    org.junit.Assert.assertEquals(expectedStr,strMethods);
+	    boolean b=strMethods.contains("Method: setVal\n\tExceptions thrown: java.lang.Exception");
+	    b=b&strMethods.contains("Parameter type(s): int\n\tReturn type: void\n\tModifier: public"); 
+	    b=b&strMethods.contains("Method: run\n\tReturn type: void\n\tModifier: public"); 
+	    b=b&strMethods.contains("Method: toString\n\tReturn type: java.lang.String\n\tModifier: public"); 
+	    b=b&strMethods.contains("Method: getVal\n\tReturn type: int\n\tModifier: public"); 
+	    b=b&strMethods.contains("Method: printSomething\n\tReturn type: void\n\tModifier: private"); 
+	    org.junit.Assert.assertTrue(b);	    
 	    
 	    // testing class is ClassB, so information about 3 methods is expected
 	    // must have a try catch clause b/c there is a throw in ClassB
@@ -99,10 +99,11 @@ public class UnitTest {
         catch (Exception e){}
         objClass = obj.getClass();
         strMethods = objInspector.inspectMethods(objClass);
-        expectedStr = "Method: run\n\tReturn type: void\n\tModifier: public"+
-        "\n\nMethod: toString\n\tReturn type: java.lang.String\n\tModifier: public"+
-        "\n\nMethod: func3\n\tParameter type(s): int\n\tReturn type: void\n\tModifier: public\n\n";
-	    org.junit.Assert.assertEquals(expectedStr,strMethods);
+        
+        b=strMethods.contains("Method: run\n\tReturn type: void\n\tModifier: public");
+        b=b&strMethods.contains("Method: toString\n\tReturn type: java.lang.String\n\tModifier: public");
+        b=b&strMethods.contains("Method: func3\n\tParameter type(s): int\n\tReturn type: void\n\tModifier: public");
+        org.junit.Assert.assertTrue(b);	 
 	}
 	
 	@Test  
@@ -113,8 +114,29 @@ public class UnitTest {
 	    Class objClass = obj.getClass();
 	    Inspector objInspector = new Inspector();
 	    String strConstructors = objInspector.inspectConstructors(objClass);
-	    String expectedStr = "Constructor: ClassD\n\tModifier: public"+
-	    "\n\nConstructor: ClassD\n\tParameter type(s): int\n\tModifier: public\n\n";
-	    org.junit.Assert.assertEquals(expectedStr,strConstructors);
+	    boolean b=strConstructors.contains("Constructor: ClassD\n\tModifier: public");
+	    b=b&strConstructors.contains("Constructor: ClassD\n\tParameter type(s): int\n\tModifier: public");
+	    org.junit.Assert.assertTrue(b);	 
 	}
+	
+    @Test
+    // test names of fields the class declares and their type and modifiers
+    // if the field is an object reference and recursive is set to false, print out reference value
+    // if it's an array, name, component type, length, and all its contents are printed where valid
+    public void testField () {    
+    	try{
+	        ClassTest cls=new ClassTest();
+	        Class objClass = cls.getClass();
+	        Inspector objInspector = new Inspector();
+	        
+	        Vector objectsToInspect = new Vector();
+	        String returnString=objInspector.inspectFields(cls,objClass,objectsToInspect); 
+		    boolean b=returnString.contains("Field: valArray\n\tType: [I\n\tModifier: private\n\tComponent type: int\n\tLength: 3\n\tValues: 1, 2, 3");
+		    b=b&returnString.contains("Field: valClass\n\tType: ClassA\n\tModifier: private\n\tReference value: ClassA 96639997");
+		    b=b&returnString.contains("Field: vallarray\n\tType: [LClassA;\n\tModifier: private\n\tComponent type: ClassA\n\tLength: 10");
+		    org.junit.Assert.assertTrue(b);
+		    }
+	    
+	    catch (Exception e){}
+    }
 }
