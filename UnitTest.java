@@ -78,7 +78,7 @@ public class UnitTest {
 	@Test  
 	// test names of Methods and their corresponding exceptions, parameter types, return type, and modifiers
 	public void testMethods() {
-		// testing class is ClassA, so 5 method names are expected
+		// testing class is ClassA, so information about 5 methods is expected
 	    Object obj= new ClassA();
 	    Class objClass = obj.getClass();
 	    Inspector objInspector = new Inspector();
@@ -91,7 +91,7 @@ public class UnitTest {
 	    		"\n\nMethod: printSomething\n\tReturn type: void\n\tModifier: private\n\n";
 	    org.junit.Assert.assertEquals(expectedStr,strMethods);
 	    
-	    // testing class is ClassB, so "Runnable" is expected
+	    // testing class is ClassB, so information about 3 methods is expected
 	    // must have a try catch clause b/c there is a throw in ClassB
         try{
         	obj = new ClassB();
@@ -103,5 +103,18 @@ public class UnitTest {
         "\n\nMethod: toString\n\tReturn type: java.lang.String\n\tModifier: public"+
         "\n\nMethod: func3\n\tParameter type(s): int\n\tReturn type: void\n\tModifier: public\n\n";
 	    org.junit.Assert.assertEquals(expectedStr,strMethods);
+	}
+	
+	@Test  
+	// test names of constructors and their corresponding parameter types and modifiers
+	public void testConstructors() {
+		// testing class is ClassD, so 2 constructors names are expected
+	    Object obj= new ClassD();
+	    Class objClass = obj.getClass();
+	    Inspector objInspector = new Inspector();
+	    String strConstructors = objInspector.inspectConstructors(objClass);
+	    String expectedStr = "Constructor: ClassD\n\tModifier: public"+
+	    "\n\nConstructor: ClassD\n\tParameter type(s): int\n\tModifier: public\n\n";
+	    org.junit.Assert.assertEquals(expectedStr,strConstructors);
 	}
 }
