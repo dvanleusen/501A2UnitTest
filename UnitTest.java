@@ -61,7 +61,7 @@ public class UnitTest {
 	    Object obj= new ClassA();
 	    Class objClass = obj.getClass();
 	    Inspector objInspector = new Inspector();
-	    String strInterfaces=objInspector.inspectInterfaces(objClass);
+	    String strInterfaces = objInspector.inspectInterfaces(objClass);
 	    org.junit.Assert.assertEquals("java.io.Serializable, java.lang.Runnable",strInterfaces);
 	    
 	    // testing class is ClassB, so "Runnable" is expected
@@ -73,5 +73,35 @@ public class UnitTest {
         objClass = obj.getClass();
 	    strInterfaces = objInspector.inspectInterfaces(objClass);
 	    org.junit.Assert.assertEquals("java.lang.Runnable",strInterfaces);
+	}
+	
+	@Test  
+	// test names of Methods and their corresponding exceptions, parameter types, return type, and modifiers
+	public void testMethods() {
+		// testing class is ClassA, so 5 method names are expected
+	    Object obj= new ClassA();
+	    Class objClass = obj.getClass();
+	    Inspector objInspector = new Inspector();
+	    String strMethods = objInspector.inspectMethods(objClass);
+	    String expectedStr = "Method: setVal\n\tExceptions thrown: java.lang.Exception"+
+	    		"\n\tParameter type(s): int\n\tReturn type: void\n\tModifier: public"+
+	    		"\n\nMethod: run\n\tReturn type: void\n\tModifier: public"+
+	    		"\n\nMethod: toString\n\tReturn type: java.lang.String\n\tModifier: public"+
+	    		"\n\nMethod: getVal\n\tReturn type: int\n\tModifier: public"+
+	    		"\n\nMethod: printSomething\n\tReturn type: void\n\tModifier: private\n\n";
+	    org.junit.Assert.assertEquals(expectedStr,strMethods);
+	    
+	    // testing class is ClassB, so "Runnable" is expected
+	    // must have a try catch clause b/c there is a throw in ClassB
+        try{
+        	obj = new ClassB();
+        }
+        catch (Exception e){}
+        objClass = obj.getClass();
+        strMethods = objInspector.inspectMethods(objClass);
+        expectedStr = "Method: run\n\tReturn type: void\n\tModifier: public"+
+        "\n\nMethod: toString\n\tReturn type: java.lang.String\n\tModifier: public"+
+        "\n\nMethod: func3\n\tParameter type(s): int\n\tReturn type: void\n\tModifier: public\n\n";
+	    org.junit.Assert.assertEquals(expectedStr,strMethods);
 	}
 }
