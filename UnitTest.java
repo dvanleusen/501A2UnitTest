@@ -21,16 +21,8 @@ public class UnitTest {
         Object obj = new ClassA();
         Class objClass = obj.getClass();
         Inspector objInspector = new Inspector();
-        Method[] m = objClass.getMethods();
-        String dClass=objInspector.inspectDeclaringClass(m[0]);
+        String dClass=objInspector.inspectDeclaringClass(obj);
         org.junit.Assert.assertEquals(dClass, "ClassA");
-        
-        // declaring class is ClassD, "ClassD" is expected
-        obj = new ClassD();
-        objClass = obj.getClass();
-        m = objClass.getMethods();
-        dClass = objInspector.inspectDeclaringClass(m[0]);
-        org.junit.Assert.assertEquals(dClass, "ClassD");
     }
 
 	@Test  
